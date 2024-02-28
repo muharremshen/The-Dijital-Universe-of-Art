@@ -1,0 +1,19 @@
+.kayit {
+   border: 1px solid black;
+   border-radius: 10px;
+   padding: 5px;
+   margin-left: 10px;
+}
+.kayit:hover {
+   background-color: black;
+   color: white;
+}
+.giriskayit {
+   margin-top: 10px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+.E-mail {
+   margin-bottom: 10px;
+}

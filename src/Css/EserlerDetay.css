@@ -1,0 +1,19 @@
+.product-image {
+   border: 1px solid #333;
+   border-radius: 10px;
+   width: 40%;
+   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+.exampleproduct-artist {
+   font-size: 18px;
+   font-weight: 370;
+   letter-spacing: 1.2px;
+   cursor: pointer;
+}
+.exampleproduct-artist:hover {
+   color: #56cfe1;
+}
+
+.product-image:hover + .product-info {
+   opacity: 0;
+}

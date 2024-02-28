@@ -1,0 +1,15 @@
+.baslik {
+   margin-top: 70px;
+   margin-bottom: 10px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.foto-odak:hover {
+   transform: scale(1.03);
+   background-color: #8e8e8e;
+}
+.foto-odak2:hover {
+   opacity: 0.9;
+}

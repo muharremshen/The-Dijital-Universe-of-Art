@@ -1,0 +1,37 @@
+@import "bootstrap-icons/font/bootstrap-icons.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+body {
+   overflow-x: hidden;
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+a {
+   text-decoration: none;
+   color: #212529;
+}
+
+.navbar-icons {
+   display: flex;
+   align-items: center;
+   margin-left: auto;
+}
+
+.navbar-icons i {
+   font-size: 1.5rem;
+   margin-left: 20px;
+   cursor: pointer;
+}
+.navbar-icons i.bi-cart {
+   color: #4caf50;
+}
+.navbar-icons i.bi-person {
+   color: #2196f3;
+}
+li {
+   list-style-type: none;
+}
+.container img.logom {
+   width: 60px;
+}
