@@ -9,11 +9,18 @@ import {
    Modal,
    Form,
 } from "react-bootstrap";
-import resim from "../img/heykel 6.jpeg";
 import { Link } from "react-router-dom";
+import io from "socket.io-client";
+import { placeBid, getAuctionDetails } from "../Request/request";
+import resim from "../img/heykel 6.jpeg";
 import resim2 from "../img/resim 1.jpeg";
 import resim3 from "../img/resim 2.jpeg";
 import resim4 from "../img/resim 4.jpg";
+
+const socket = io("http://localhost:5001", {
+   withCredentials: true,
+   transports: ["websocket"], // websocket'i varsayılan transport olarak ayarlayın
+});
 
 const AuctionPage = () => {
    const [auctionItems, setAuctionItems] = useState([
@@ -23,8 +30,8 @@ const AuctionPage = () => {
          description: "Kanatlı Balık heykelimiz açık arttırmaya sunulmuştur.",
          currentBid: 10000,
          imageSrc: resim,
-         endTime: new Date("2024-02-01T12:00:00"), // Bitiş tarihi
-         timeLeft: "", // Kalan süre
+         endTime: new Date("2024-02-01T12:00:00"),
+         timeLeft: "",
       },
       {
          id: 2,
@@ -32,31 +39,32 @@ const AuctionPage = () => {
          description: "Kanatlı Balık heykelimiz açık arttırmaya sunulmuştur.",
          currentBid: 5000,
          imageSrc: resim2,
-         endTime: new Date("2024-02-01T12:00:00"), // Bitiş tarihi
-         timeLeft: "", // Kalan süre
+         endTime: new Date("2024-02-01T12:00:00"),
+         timeLeft: "",
       },
       {
          id: 3,
-         title: "Eser 2",
+         title: "Eser 3",
          description: "Kanatlı Balık heykelimiz açık arttırmaya sunulmuştur.",
          currentBid: 5000,
          imageSrc: resim3,
-         endTime: new Date("2024-02-01T12:00:00"), // Bitiş tarihi
-         timeLeft: "", // Kalan süre
+         endTime: new Date("2024-02-01T12:00:00"),
+         timeLeft: "",
       },
       {
          id: 4,
-         title: "Eser 2",
+         title: "Eser 4",
          description: "Kanatlı Balık heykelimiz açık arttırmaya sunulmuştur.",
          currentBid: 5000,
          imageSrc: resim4,
-         endTime: new Date("2024-02-01T12:00:00"), // Bitiş tarihi
-         timeLeft: "", // Kalan süre
+         endTime: new Date("2024-02-01T12:00:00"),
+         timeLeft: "",
       },
    ]);
 
    const [showModal, setShowModal] = useState(false);
    const [bidAmount, setBidAmount] = useState("");
+   const [selectedItem, setSelectedItem] = useState(null);
 
    const calculateTimeLeft = (endTime) => {
       const now = new Date();
@@ -74,7 +82,8 @@ const AuctionPage = () => {
       return `${days}g ${hours}sa ${minutes}dk ${seconds}s`;
    };
 
-   const handleBidClick = () => {
+   const handleBidClick = (item) => {
+      setSelectedItem(item);
       setShowModal(true);
    };
 
@@ -82,14 +91,21 @@ const AuctionPage = () => {
       setShowModal(false);
    };
 
-   const handleBidSubmit = () => {
-      // Burada teklifi sunucuya gönderme işlemini yapacağız.
-      // Sunucu yanıtına göre teklifin kabul edilip edilmediğini kontrol edin.
-      // Başarılı bir şekilde kabul edilirse, currentBid'i güncelle ve modalı kapat.
+   const handleBidSubmit = async () => {
+      const bid = {
+         auctionId: selectedItem.id,
+         userId: "currentUserId", // Bu değeri gerçek kullanıcı kimliğiyle değiştirin
+         amount: parseInt(bidAmount),
+      };
 
-      console.log("Yeni teklif:", bidAmount);
-      // Teklif gönderildikten sonra:
-      // setAuctionItems ile güncelleme yapılmalı
+      try {
+         const response = await placeBid(bid);
+         console.log("Bid placed successfully:", response);
+         socket.emit("placeBid", bid);
+      } catch (error) {
+         console.error("Error placing bid:", error);
+      }
+
       setShowModal(false);
    };
 
@@ -105,80 +121,59 @@ const AuctionPage = () => {
       return () => clearInterval(intervalId);
    }, [auctionItems]);
 
-   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
    useEffect(() => {
-      // Kullanıcı sayfaya her giriş yaptığında karşılama modalını göster
-      setShowWelcomeModal(true);
+      socket.on("connect", () => {
+         console.log("Socket.IO bağlantısı kuruldu!");
+      });
+
+      socket.on("bidUpdate", ({ auctionId, newBid }) => {
+         setAuctionItems((prevItems) =>
+            prevItems.map((item) =>
+               item.id === auctionId ? { ...item, currentBid: newBid } : item
+            )
+         );
+      });
+
+      return () => {
+         socket.disconnect();
+      };
    }, []);
 
-   const handleWelcomeModalClose = () => {
-      setShowWelcomeModal(false);
-   };
    return (
-      <Container>
-         {/* Hoş Geldiniz*/}
-         <Modal show={showWelcomeModal} onHide={handleWelcomeModalClose}>
-            <Modal.Header closeButton>
-               <Modal.Title>Hoş Geldiniz!</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               <p>Canlı müzayedemize hoş geldiniz!</p>
-               <ul>
-                  <li>
-                     Her eser için belirlenen süre içinde teklif verebilirsiniz.
-                  </li>
-                  <li>En yüksek teklifi veren kişi eseri kazanır.</li>
-                  <li>Tekliflerinizi artırarak şansınızı artırabilirsiniz.</li>
-               </ul>
-               <p>Müzayedemizde iyi şanslar!</p>
-            </Modal.Body>
-            <Modal.Footer>
-               <Button variant="secondary" onClick={handleWelcomeModalClose}>
-                  Anladım
-               </Button>
-            </Modal.Footer>
-         </Modal>
+      <Container className="auction-page">
          <Row>
             {auctionItems.map((item) => (
-               <Col key={item.id} sm={12} md={6} lg={4}>
-                  <Card className="mb-4 w-100">
-                     <Link to="/sculpture">
-                        <Card.Img
-                           variant="top"
-                           src={item.imageSrc}
-                           alt={item.title}
-                        />
-                     </Link>
+               <Col key={item.id} sm={6} md={4} lg={3}>
+                  <Card className="auction-item">
+                     <Card.Img variant="top" src={item.imageSrc} />
                      <Card.Body>
                         <Card.Title>{item.title}</Card.Title>
                         <Card.Text>{item.description}</Card.Text>
-                        <Card.Text>
-                           <Badge bg="info">Kalan Süre: {item.timeLeft}</Badge>
-                        </Card.Text>
-                        <Card.Text>
-                           Şu anki teklif: <strong>{item.currentBid}TL</strong>
-                        </Card.Text>
-                        <Button variant="primary" onClick={handleBidClick}>
-                           Teklif Ver
-                        </Button>
+                        <div className="d-flex justify-content-between align-items-center">
+                           <Badge bg="secondary">{item.currentBid} TL</Badge>
+                           <Button
+                              variant="primary"
+                              onClick={() => handleBidClick(item)}
+                           >
+                              Teklif Ver
+                           </Button>
+                        </div>
+                        <div>Kalan Süre: {item.timeLeft}</div>
                      </Card.Body>
                   </Card>
                </Col>
             ))}
          </Row>
-
-         {/* Teklif Modal */}
          <Modal show={showModal} onHide={handleModalClose}>
             <Modal.Header closeButton>
                <Modal.Title>Teklif Ver</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                <Form>
-                  <Form.Group controlId="bidAmount">
-                     <Form.Label>Teklif Miktarı</Form.Label>
+                  <Form.Group controlId="formBidAmount">
+                     <Form.Label>Teklif Tutarı</Form.Label>
                      <Form.Control
                         type="number"
-                        placeholder="Teklif miktarını girin"
                         value={bidAmount}
                         onChange={(e) => setBidAmount(e.target.value)}
                      />
@@ -187,7 +182,7 @@ const AuctionPage = () => {
             </Modal.Body>
             <Modal.Footer>
                <Button variant="secondary" onClick={handleModalClose}>
-                  İptal
+                  Kapat
                </Button>
                <Button variant="primary" onClick={handleBidSubmit}>
                   Teklif Ver

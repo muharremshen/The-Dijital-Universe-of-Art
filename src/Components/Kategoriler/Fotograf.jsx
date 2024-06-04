@@ -1,57 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import fotograf1 from "../../img/fotograf 1.jpg";
-import fotograf2 from "../../img/fotograf 2.jpg";
-import fotograf3 from "../../img/fotograf 3.jpg";
-import fotograf4 from "../../img/fotograf 4.jpg";
+import { fetchFotografPieces } from "../../Request/request";
 
 const Fotograf = () => {
-   const initialSculptures = [
-      {
-         id: 1,
-         name: "Fotoğraf 1",
-         image: fotograf1,
-         price: 1000,
-         color: "Kahverengi",
-         size: "51cm",
-         theme: "İnsan",
-         technique: "Kağıt Üzerine Baskı",
-      },
-      {
-         id: 2,
-         name: "Fotoğraf 2",
-         image: fotograf2,
-         price: 3000,
-         color: "Siyah",
-         size: "20cm",
-         theme: "Soyut",
-         technique: "Fotoblok Üzerine Baskı",
-      },
-      {
-         id: 3,
-         name: "Fotoğraf 3",
-         image: fotograf3,
-         price: 7500,
-         color: "Yeşil",
-         size: "30cm",
-         theme: "Figüratif",
-         technique: "Dijital Baskı",
-      },
-      {
-         id: 4,
-         name: "Fotoğraf 4",
-         image: fotograf4,
-         price: 9000,
-         color: "Yeşil",
-         size: "10cm",
-         theme: "Doğa",
-         technique: "Fotoblok Üzerine Baskı",
-      },
-   ];
-   const [sculptures, setSculptures] = useState(initialSculptures);
-   const [filteredSculptures, setFilteredSculptures] =
-      useState(initialSculptures);
+   const [sculptures, setSculptures] = useState([]);
+   const [filteredSculptures, setFilteredSculptures] = useState([]);
 
    const [colorFilter, setColorFilter] = useState("");
    const [priceRange, setPriceRange] = useState("");
@@ -60,10 +14,24 @@ const Fotograf = () => {
    const [techniqueFilter, setTechniqueFilter] = useState("");
 
    const priceRanges = {
-      "1000-2500": { min: 1000, max: 2500 },
-      "2500-5000": { min: 2500, max: 5000 },
-      "5000-10000": { min: 5000, max: 10000 },
+      "1000-25000": { min: 1000, max: 25000 },
+      "25000-50000": { min: 25000, max: 50000 },
+      "50000-100000": { min: 50000, max: 100000 },
    };
+
+   useEffect(() => {
+      const fetchArtPieces = async () => {
+         try {
+            const data = await fetchFotografPieces();
+            setSculptures(data);
+            setFilteredSculptures(data);
+         } catch (error) {
+            console.error("Sanat eserleri çekilemedi", error);
+         }
+      };
+
+      fetchArtPieces();
+   }, []);
 
    useEffect(() => {
       let filtered = sculptures;
@@ -84,7 +52,7 @@ const Fotograf = () => {
       if (sizeFilter) {
          const [minSize, maxSize] = sizeFilter.split("-").map(Number);
          filtered = filtered.filter((sculpture) => {
-            const sculptureSize = parseInt(sculpture.size, 10);
+            const sculptureSize = sculpture.height * sculpture.width;
             return sculptureSize >= minSize && sculptureSize <= maxSize;
          });
       }
@@ -97,12 +65,19 @@ const Fotograf = () => {
 
       if (techniqueFilter) {
          filtered = filtered.filter(
-            (sculpture) => sculpture.technique === techniqueFilter
+            (sculpture) => sculpture.technical === techniqueFilter
          );
       }
 
       setFilteredSculptures(filtered);
-   }, [colorFilter, priceRange, sizeFilter, themeFilter, techniqueFilter]);
+   }, [
+      sculptures,
+      colorFilter,
+      priceRange,
+      sizeFilter,
+      themeFilter,
+      techniqueFilter,
+   ]);
 
    const clearFilters = () => {
       setColorFilter("");
@@ -145,9 +120,9 @@ const Fotograf = () => {
                      value={priceRange}
                   >
                      <option value="">Tümü</option>
-                     <option value="1000-2500">1000 - 2500 TL</option>
-                     <option value="2500-5000">2500 - 5000 TL</option>
-                     <option value="5000-10000">5000 - 10000 TL</option>
+                     <option value="1000-25000">1000 - 25000 TL</option>
+                     <option value="25000-50000">25000 - 50000 TL</option>
+                     <option value="50000-100000">50000 - 100000 TL</option>
                   </select>
                </div>
                <div className="mb-3">
@@ -161,9 +136,9 @@ const Fotograf = () => {
                      value={colorFilter}
                   >
                      <option value="">Tümü</option>
-                     <option value="Siyah">Siyah</option>
-                     <option value="Yeşil">Yeşil</option>
-                     <option value="Kahverengi">Kahverengi</option>
+                     <option value="siyah">Siyah</option>
+                     <option value="yesil">Yeşil</option>
+                     <option value="kahverengi">Kahverengi</option>
                   </select>
                </div>
                <div className="mb-3">
@@ -177,13 +152,17 @@ const Fotograf = () => {
                      value={sizeFilter}
                   >
                      <option value="">Tümü</option>
-                     <option value="0-25">25cm'den küçük değerler</option>
-                     <option value="26-50">26 - 50 cm</option>
-                     <option value="51-75">51 - 75 cm</option>
+                     <option value="0-625">25 cm²'den küçük değerler</option>
+                     <option value="626-2500">26 - 50 cm²</option>
+                     <option value="2501-5625">51 - 75 cm²</option>
                   </select>
                </div>
                <div className="mb-3">
-                  <label htmlFor="themeFilter" className="form-label">
+                  <label
+                     htmlFor="themeFilter"
+                     className="form-label
+"
+                  >
                      Tema
                   </label>
                   <select
@@ -193,10 +172,10 @@ const Fotograf = () => {
                      value={themeFilter}
                   >
                      <option value="">Tümü</option>
-                     <option value="Soyut">Soyut</option>
-                     <option value="Figüratif">Figüratif</option>
-                     <option value="Doğa">Doğa</option>
-                     <option value="İnsan">İnsan</option>
+                     <option value="soyut">Soyut</option>
+                     <option value="figuratif">Figüratif</option>
+                     <option value="doga">Doğa</option>
+                     <option value="insan">İnsan</option>
                   </select>
                </div>
                <div className="mb-3">
@@ -210,13 +189,13 @@ const Fotograf = () => {
                      value={techniqueFilter}
                   >
                      <option value="">Tümü</option>
-                     <option value="Kağıt Üzerine Baskı">
+                     <option value="kagit uzerine baski">
                         Kağıt Üzerine Baskı
                      </option>
-                     <option value="Fotoblok Üzerine Baskı">
+                     <option value="fotoblok uzerine baski">
                         Fotoblok Üzerine Baskı
                      </option>
-                     <option value="Dijital Baskı">Dijital Baskı</option>
+                     <option value="dijital baski">Dijital Baskı</option>
                   </select>
                </div>
                <div className="mb-3">
@@ -228,27 +207,22 @@ const Fotograf = () => {
             <Col md={9}>
                <Row>
                   {filteredSculptures.map((sculpture) => (
-                     <Col md={4} key={sculpture.id} className="mb-4">
+                     <Col md={4} key={sculpture._id} className="mb-4">
                         <Card className="h-100">
-                           <Link to={"/sculpture"}>
+                           <Link to={`/sculpture/${sculpture._id}`}>
                               <Card.Img
                                  variant="top"
-                                 src={sculpture.image}
+                                 src={sculpture.imageUrl}
                                  className="sculpture-image"
                               />
                            </Link>
                            <Card.Body>
-                              <Card.Title>{sculpture.name}</Card.Title>
+                              <Card.Title>{sculpture.imageName}</Card.Title>
                               <Card.Text className="kategoriopacity">
                                  Fiyat: {sculpture.price} TL
                                  <br />
-                                 Renk: {sculpture.color}
-                                 <br />
-                                 Boyut: {sculpture.size}
-                                 <br />
-                                 Tema: {sculpture.theme}
-                                 <br />
-                                 Teknik: {sculpture.technique}
+                                 Boyut: {sculpture.height} x {sculpture.width}{" "}
+                                 cm
                               </Card.Text>
                            </Card.Body>
                         </Card>

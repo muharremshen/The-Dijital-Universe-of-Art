@@ -1,0 +1,13 @@
+.adminlogin-container {
+   background-color: #583183; /* Arka plan rengi */
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.adminlogin {
+   position: relative;
+}

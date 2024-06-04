@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import LoginFoto from "../img/SanatınDijitalEvreni.png";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { fetchLogin } from "../Request/request.js";
 
 const LoginPage = () => {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [emailError, setEmailError] = useState("");
    const [passwordError, setPasswordError] = useState("");
+   const navigate = useNavigate();
 
    const validateEmail = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,15 +34,25 @@ const LoginPage = () => {
       }
    };
 
-   const handleSubmit = (e) => {
+   // Kullanıcı oturumunu başlatma
+   const handleLogin = (userId) => {
+      localStorage.setItem("userId", userId);
+   };
+
+   const handleSubmit = async (e) => {
       e.preventDefault();
 
       validateEmail();
       validatePassword();
+      const payload = {
+         email: email,
+         password: password,
+      };
+      const login = await fetchLogin(payload);
 
-      // Eğer hata mesajları boşsa, formu gönder
-      if (!emailError && !passwordError) {
-         // Form gönderme işlemleri
+      if (login.token) {
+         handleLogin(login.user._id); // Kullanıcı oturumunu başlat
+         return navigate("/");
       }
    };
 

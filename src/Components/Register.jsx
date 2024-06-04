@@ -2,33 +2,26 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LoginFoto from "../img/SanatınDijitalEvreni.png";
+import { registerUser } from "../Request/request";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
-   const [firstName, setFirstName] = useState("");
-   const [lastName, setLastName] = useState("");
+   const [name, setFirstName] = useState("");
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [confirmPassword, setConfirmPassword] = useState("");
    const [firstNameError, setFirstNameError] = useState("");
-   const [lastNameError, setLastNameError] = useState("");
    const [emailError, setEmailError] = useState("");
    const [passwordError, setPasswordError] = useState("");
    const [confirmPasswordError, setConfirmPasswordError] = useState("");
-   const [userType, setUserType] = useState("");
+   const [status, setUserType] = useState("");
+   const navigate = useNavigate();
 
    const validateFirstName = () => {
-      if (!firstName.trim()) {
+      if (!name.trim()) {
          setFirstNameError("Ad alanı boş bırakılamaz.");
       } else {
          setFirstNameError("");
-      }
-   };
-
-   const validateLastName = () => {
-      if (!lastName.trim()) {
-         setLastNameError("Soyad alanı boş bırakılamaz.");
-      } else {
-         setLastNameError("");
       }
    };
 
@@ -63,32 +56,38 @@ const RegisterPage = () => {
          setConfirmPasswordError("");
       }
    };
+
    const handleUserTypeChange = (selectedType) => {
       setUserType(selectedType);
    };
 
    const validateAllFields = () => {
       validateFirstName();
-      validateLastName();
       validateEmail();
       validatePassword();
       validateConfirmPassword();
    };
 
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
       e.preventDefault();
+
+      const data = {
+         name,
+         email,
+         password,
+         status,
+      };
 
       validateAllFields();
 
-      if (
-         !firstNameError &&
-         !lastNameError &&
-         !emailError &&
-         !passwordError &&
-         !confirmPasswordError &&
-         userType
-      ) {
-         // Backend'e gönderme işlemleri
+      const response = await registerUser(data);
+
+      if (response && response.message) {
+         alert("Kayıt başarıyla tamamlandı!");
+         // İsteğe bağlı olarak başka bir işlem yapabilirsiniz, örneğin:
+         navigate("/login"); // Kayıt başarılı olduğunda otomatik olarak giriş sayfasına yönlendirme
+      } else {
+         alert("Kayıt başarısız oldu. Lütfen tekrar deneyin.");
       }
    };
 
@@ -116,36 +115,18 @@ const RegisterPage = () => {
                         controlId="formBasicFirstName"
                         className="Register"
                      >
-                        <Form.Label>Adınız</Form.Label>
+                        <Form.Label>Adınız-Soyadınız</Form.Label>
                         <Form.Control
                            type="text"
                            placeholder="Name"
-                           value={firstName}
+                           value={name}
                            onChange={(e) => setFirstName(e.target.value)}
                            onBlur={validateFirstName}
+                           required
                         />
                         {firstNameError && (
                            <Form.Text className="text-danger">
                               {firstNameError}
-                           </Form.Text>
-                        )}
-                     </Form.Group>
-
-                     <Form.Group
-                        controlId="formBasicLastName"
-                        className="Register"
-                     >
-                        <Form.Label>Soyadınız</Form.Label>
-                        <Form.Control
-                           type="text"
-                           placeholder="Surname"
-                           value={lastName}
-                           onChange={(e) => setLastName(e.target.value)}
-                           onBlur={validateLastName}
-                        />
-                        {lastNameError && (
-                           <Form.Text className="text-danger">
-                              {lastNameError}
                            </Form.Text>
                         )}
                      </Form.Group>
@@ -161,6 +142,7 @@ const RegisterPage = () => {
                            value={email}
                            onChange={(e) => setEmail(e.target.value)}
                            onBlur={validateEmail}
+                           required
                         />
                         {emailError && (
                            <Form.Text className="text-danger">
@@ -180,6 +162,7 @@ const RegisterPage = () => {
                            value={password}
                            onChange={(e) => setPassword(e.target.value)}
                            onBlur={validatePassword}
+                           required
                         />
                         {passwordError && (
                            <Form.Text className="text-danger">
@@ -199,6 +182,7 @@ const RegisterPage = () => {
                            value={confirmPassword}
                            onChange={(e) => setConfirmPassword(e.target.value)}
                            onBlur={validateConfirmPassword}
+                           required
                         />
                         {confirmPasswordError && (
                            <Form.Text className="text-danger">
@@ -216,14 +200,14 @@ const RegisterPage = () => {
                               type="radio"
                               label="Sanatçı"
                               value="artist"
-                              checked={userType === "artist"}
+                              checked={status === "artist"}
                               onChange={() => handleUserTypeChange("artist")}
                            />
                            <Form.Check
                               type="radio"
                               label="Sanatsever"
                               value="artLover"
-                              checked={userType === "artLover"}
+                              checked={status === "artLover"}
                               onChange={() => handleUserTypeChange("artLover")}
                            />
                         </div>

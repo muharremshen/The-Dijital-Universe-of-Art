@@ -1,56 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import heykel1 from "../../img/heykel 6.jpeg";
-import heykel2 from "../../img/heykel 9.jpeg";
-import heykel3 from "../../img/heykel 10.jpeg";
+import { fetchHeykelPieces } from "../../Request/request";
 
-const SculptureGallery = () => {
-   const initialSculptures = [
-      {
-         id: 1,
-         name: "Heykel 1",
-         image: heykel1,
-         price: 1000,
-         color: "Kahverengi",
-         size: "51cm",
-         theme: "İnsan",
-         technique: "Ahşap",
-      },
-      {
-         id: 2,
-         name: "Heykel 2",
-         image: heykel2,
-         price: 3000,
-         color: "Siyah",
-         size: "20cm",
-         theme: "Soyut",
-         technique: "Metal",
-      },
-      {
-         id: 3,
-         name: "Heykel 3",
-         image: heykel3,
-         price: 7500,
-         color: "Yeşil",
-         size: "30cm",
-         theme: "Figüratif",
-         technique: "Mermer",
-      },
-      {
-         id: 4,
-         name: "Heykel 4",
-         image: heykel3,
-         price: 9000,
-         color: "Yeşil",
-         size: "10cm",
-         theme: "Doğa",
-         technique: "Seramik",
-      },
-   ];
-   const [sculptures, setSculptures] = useState(initialSculptures);
-   const [filteredSculptures, setFilteredSculptures] =
-      useState(initialSculptures);
+const Heykel = () => {
+   const [sculptures, setSculptures] = useState([]);
+   const [filteredSculptures, setFilteredSculptures] = useState([]);
 
    const [colorFilter, setColorFilter] = useState("");
    const [priceRange, setPriceRange] = useState("");
@@ -59,10 +14,24 @@ const SculptureGallery = () => {
    const [techniqueFilter, setTechniqueFilter] = useState("");
 
    const priceRanges = {
-      "1000-2500": { min: 1000, max: 2500 },
-      "2500-5000": { min: 2500, max: 5000 },
-      "5000-10000": { min: 5000, max: 10000 },
+      "1000-25000": { min: 1000, max: 25000 },
+      "25000-50000": { min: 25000, max: 50000 },
+      "50000-100000": { min: 50000, max: 100000 },
    };
+
+   useEffect(() => {
+      const fetchArtPieces = async () => {
+         try {
+            const data = await fetchHeykelPieces();
+            setSculptures(data);
+            setFilteredSculptures(data);
+         } catch (error) {
+            console.error("Sanat eserleri çekilemedi", error);
+         }
+      };
+
+      fetchArtPieces();
+   }, []);
 
    useEffect(() => {
       let filtered = sculptures;
@@ -83,7 +52,7 @@ const SculptureGallery = () => {
       if (sizeFilter) {
          const [minSize, maxSize] = sizeFilter.split("-").map(Number);
          filtered = filtered.filter((sculpture) => {
-            const sculptureSize = parseInt(sculpture.size, 10);
+            const sculptureSize = sculpture.height * sculpture.width;
             return sculptureSize >= minSize && sculptureSize <= maxSize;
          });
       }
@@ -96,12 +65,19 @@ const SculptureGallery = () => {
 
       if (techniqueFilter) {
          filtered = filtered.filter(
-            (sculpture) => sculpture.technique === techniqueFilter
+            (sculpture) => sculpture.technical === techniqueFilter
          );
       }
 
       setFilteredSculptures(filtered);
-   }, [colorFilter, priceRange, sizeFilter, themeFilter, techniqueFilter]);
+   }, [
+      sculptures,
+      colorFilter,
+      priceRange,
+      sizeFilter,
+      themeFilter,
+      techniqueFilter,
+   ]);
 
    const clearFilters = () => {
       setColorFilter("");
@@ -120,17 +96,15 @@ const SculptureGallery = () => {
                   opacity: 0.6,
                }}
             >
-               Heykel
+               Fotoğraf
             </h6>
             <p>
-               Sanatın üç boyutlu ifadesi olarak heykel, farklı tekniklerle
-               üretilmiş çok çeşitli seçeneklere ev sahipliği yapar. Figüratif
-               ya da soyut, bronz, metal, ahşap, seramik, gibi çeşitli
-               malzemelerle şekillenen heykel koleksiyonumuz, ünlü
-               heykeltıraşların ve genç yeteneklerin imzasını taşıyan eserlerle
-               zenginleşmiştir. Galerimizde, heykel dünyasında aradığınızı
-               bulmak ve koleksiyonunuzu özelleştirmek için geniş bir seçenek
-               yelpazesi sizleri bekliyor.
+               Fotoğraf, çağdaş sanatın yenilikçi dilini konuşan ve son yıllarda
+               önde gelen sanat fuarlarından müzayedelere, özel koleksiyonlara
+               kadar geniş bir platformda kendine yer bulan bir sanat formudur.
+               Fotoğraf sanatçısının objektifi aracılığıyla yakalanan anılar,
+               izleyicilere "müze kalitesi"nde bir deneyim sunar, her karede
+               sanatseverleri etkileyen bir hikaye anlatır.
             </p>
          </div>
          <Row>
@@ -146,9 +120,9 @@ const SculptureGallery = () => {
                      value={priceRange}
                   >
                      <option value="">Tümü</option>
-                     <option value="1000-2500">1000 - 2500 TL</option>
-                     <option value="2500-5000">2500 - 5000 TL</option>
-                     <option value="5000-10000">5000 - 10000 TL</option>
+                     <option value="1000-25000">1000 - 25000 TL</option>
+                     <option value="25000-50000">25000 - 50000 TL</option>
+                     <option value="50000-100000">50000 - 100000 TL</option>
                   </select>
                </div>
                <div className="mb-3">
@@ -162,9 +136,9 @@ const SculptureGallery = () => {
                      value={colorFilter}
                   >
                      <option value="">Tümü</option>
-                     <option value="Siyah">Siyah</option>
-                     <option value="Yeşil">Yeşil</option>
-                     <option value="Kahverengi">Kahverengi</option>
+                     <option value="siyah">Siyah</option>
+                     <option value="yesil">Yeşil</option>
+                     <option value="kahverengi">Kahverengi</option>
                   </select>
                </div>
                <div className="mb-3">
@@ -178,13 +152,17 @@ const SculptureGallery = () => {
                      value={sizeFilter}
                   >
                      <option value="">Tümü</option>
-                     <option value="0-25">25cm'den küçük değerler</option>
-                     <option value="26-50">26 - 50 cm</option>
-                     <option value="51-75">51 - 75 cm</option>
+                     <option value="0-625">25 cm²'den küçük değerler</option>
+                     <option value="626-2500">26 - 50 cm²</option>
+                     <option value="2501-5625">51 - 75 cm²</option>
                   </select>
                </div>
                <div className="mb-3">
-                  <label htmlFor="themeFilter" className="form-label">
+                  <label
+                     htmlFor="themeFilter"
+                     className="form-label
+"
+                  >
                      Tema
                   </label>
                   <select
@@ -194,10 +172,10 @@ const SculptureGallery = () => {
                      value={themeFilter}
                   >
                      <option value="">Tümü</option>
-                     <option value="Soyut">Soyut</option>
-                     <option value="Figüratif">Figüratif</option>
-                     <option value="Doğa">Doğa</option>
-                     <option value="İnsan">İnsan</option>
+                     <option value="soyut">Soyut</option>
+                     <option value="figuratif">Figüratif</option>
+                     <option value="doga">Doğa</option>
+                     <option value="insan">İnsan</option>
                   </select>
                </div>
                <div className="mb-3">
@@ -226,27 +204,22 @@ const SculptureGallery = () => {
             <Col md={9}>
                <Row>
                   {filteredSculptures.map((sculpture) => (
-                     <Col md={4} key={sculpture.id} className="mb-4">
+                     <Col md={4} key={sculpture._id} className="mb-4">
                         <Card className="h-100">
-                           <Link to={"/sculpture"}>
+                           <Link to={`/sculpture/${sculpture._id}`}>
                               <Card.Img
                                  variant="top"
-                                 src={sculpture.image}
+                                 src={sculpture.imageUrl}
                                  className="sculpture-image"
                               />
                            </Link>
                            <Card.Body>
-                              <Card.Title>{sculpture.name}</Card.Title>
+                              <Card.Title>{sculpture.imageName}</Card.Title>
                               <Card.Text className="kategoriopacity">
                                  Fiyat: {sculpture.price} TL
                                  <br />
-                                 Renk: {sculpture.color}
-                                 <br />
-                                 Boyut: {sculpture.size}
-                                 <br />
-                                 Tema: {sculpture.theme}
-                                 <br />
-                                 Teknik: {sculpture.technique}
+                                 Boyut: {sculpture.height} x {sculpture.width}{" "}
+                                 cm
                               </Card.Text>
                            </Card.Body>
                         </Card>
@@ -259,4 +232,4 @@ const SculptureGallery = () => {
    );
 };
 
-export default SculptureGallery;
+export default Heykel;

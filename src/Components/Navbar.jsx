@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import logo from "../img/SanatınDijitalEvreni.png";
@@ -11,6 +11,24 @@ const Navbar = () => {
    };
 
    const navigate = useNavigate(); // Programatik olarak geçişi sağlar.
+   const [status, setStatus] = useState(localStorage.getItem("status"));
+   const [isMenuOpen, setIsMenuOpen] = useState(false); // Menü durumunu takip etmek için bir state
+
+   const handleStatus = () => {
+      localStorage.setItem("status", "artLover"); // localStorage'ta 'status' değerini 'artLover' olarak ayarla
+      setStatus("artLover"); // status state'ini güncelle
+   };
+
+   const handleLogout = () => {
+      localStorage.removeItem("status"); // localStorage'tan 'status' değerini kaldır
+      setStatus(null); // status state'ini güncelle
+      alert("Çıkış yapıldı."); // Çıkış yapıldığında bir uyarı göster
+      navigate("/Login");
+   };
+
+   const toggleMenu = () => {
+      setIsMenuOpen(!isMenuOpen); // Menü durumunu tersine çevir
+   };
 
    return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,15 +40,19 @@ const Navbar = () => {
             <button
                className="navbar-toggler"
                type="button"
-               data-toggle="collapse"
-               data-target="#navbarNav"
-               aria-controls="navbarNav"
-               aria-expanded="false"
+               onClick={toggleMenu} // Menüyü açmak için fonksiyonu çağır
+               aria-expanded={isMenuOpen ? "true" : "false"} // Açık/kapalı durumu belirt
                aria-label="Toggle navigation"
             >
                <span className="navbar-toggler-icon"></span>
             </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
+            <div
+               className={`collapse navbar-collapse ${
+                  isMenuOpen ? "show" : ""
+               }`}
+               id="navbarNav"
+            >
+               {" "}
                <ul className="navbar-nav ms-auto">
                   <li className="nav-item">
                      <Link className="nav-link" to="/">
@@ -76,16 +98,45 @@ const Navbar = () => {
                      </Link>
                   </li>
                   <li className="nav-item">
-                     <Link
-                        className="nav-link d-flex justify-content-center align-items-center"
-                        to="/ekle"
-                     >
-                        Ekle
-                        <MdAddToPhotos className="mx-1" />
-                     </Link>
+                     {status === "artist" && (
+                        <Link
+                           to="/ekle"
+                           className="nav-link d-flex justify-content-center align-items-center"
+                        >
+                           Ekle
+                           <MdAddToPhotos className="mx-1" />
+                        </Link>
+                     )}
+                  </li>
+                  <li className="nav-item">
+                     <Dropdown>
+                        <Dropdown.Toggle variant="link" id="dropdown-basic">
+                           <i className="bi bi-person"></i>
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                           {status === "artist" && (
+                              <Dropdown.Item>
+                                 <Link to="/profil-duzenle">
+                                    Profil Düzenle
+                                 </Link>
+                              </Dropdown.Item>
+                           )}
+                           {status === "artist" || status === "artLover" ? (
+                              <Dropdown.Item onClick={handleLogout}>
+                                 Çıkış yap
+                              </Dropdown.Item>
+                           ) : (
+                              <Dropdown.Item>
+                                 <Link to="/login" onClick={handleStatus}>
+                                    Giriş yap
+                                 </Link>
+                              </Dropdown.Item>
+                           )}
+                        </Dropdown.Menu>
+                     </Dropdown>
                   </li>
                </ul>
-
                <form
                   className="d-flex align-items-center"
                   onSubmit={performSearch}
@@ -100,15 +151,6 @@ const Navbar = () => {
                      <i className="bi bi-search"></i>
                   </button>
                </form>
-            </div>
-
-            <div className="d-flex align-items-center navbar-icons">
-               <Link to="/login">
-                  <i className="bi bi-person"></i>
-               </Link>
-               <Link to="/alisveris-sepeti">
-                  <i className="bi bi-cart"></i>
-               </Link>
             </div>
          </div>
       </nav>

@@ -1,15 +1,50 @@
-.baslik {
-   margin-top: 70px;
-   margin-bottom: 10px;
+.soneklenen-container {
    display: flex;
-   justify-content: center;
+   flex-direction: column;
    align-items: center;
 }
 
-.foto-odak:hover {
-   transform: scale(1.03);
-   background-color: #8e8e8e;
+.soneklenenler-kapsam {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   width: 100%;
 }
-.foto-odak2:hover {
-   opacity: 0.9;
+
+.foto-odak {
+   flex: 1 1 300px;
+   margin: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   border-radius: 10px;
+   overflow: hidden;
+   max-width: 300px;
+   transition: transform 0.2s;
+}
+
+.foto-odak img {
+   width: 100%;
+   height: 200px; /* Yüksekliği sabitleyerek tüm resimlerin aynı boyutta görünmesini sağlıyoruz */
+   object-fit: cover;
+   border-bottom: 1px solid #ddd;
+}
+
+.foto-odak:hover {
+   transform: scale(1.05);
+}
+
+.soneklenen-body {
+   padding: 10px;
+   text-align: center;
+}
+
+.card-title {
+   margin-bottom: 10px;
+   font-size: 1.1em;
+}
+
+.baslik {
+   margin-top: 70px;
+   margin-bottom: 20px;
+   font-size: 1.5em;
+   text-align: center;
 }
