@@ -27,31 +27,33 @@ import AlisverisSepeti from "./Routes/AlisverisSepeti";
 import ProfilDuzenleme from "./Routes/ProfileEdit";
 import AdminLogin from "./Components/AdminPanel/AdminLogin";
 import Auction from "./Components/AdminPanel/Auction";
+import AuctionList from "./Components/AdminPanel/AuctionList";
 import Dashboard from "./Components/AdminPanel/Dashboard";
 import Users from "./Components/AdminPanel/Users";
 function App() {
-   return (
-      <Routes>
-         <Route path="/" element={<Anasayfa />} />
-         <Route path="/contacts" element={<Contacts />} />
-         <Route path="/sanatcilar" element={<Sanatcilar />} />
-         <Route path="/sanatci/:id" element={<Sanatci />} />
-         <Route path="/login" element={<Login />} />
-         <Route path="/register" element={<Register />} />
-         <Route path="/kategori/resim" element={<ResimPage />} />
-         <Route path="/kategori/heykel" element={<HeykelPage />} />
-         <Route path="/kategori/fotograf" element={<FotografPage />} />
-         <Route path="/ekle" element={<EserEkle />} />
-         <Route path="/sculpture" element={<EserlerDetay />} />
-         <Route path="/canli-muzayede" element={<CanliMuzayede />} />
-         <Route path="/alisveris-sepeti" element={<AlisverisSepeti />} />
-         <Route path="/profil-duzenle" element={<ProfilDuzenleme />} />
-         <Route path="/adminlogin" element={<AdminLogin />} />
-         <Route path="/auctions" element={<Auction />} />
-         <Route path="/dashboard" element={<Dashboard />} />
-         <Route path="/users" element={<Users />} />
-      </Routes>
-   );
+  return (
+    <Routes>
+      <Route path="/" element={<Anasayfa />} />
+      <Route path="/contacts" element={<Contacts />} />
+      <Route path="/sanatcilar" element={<Sanatcilar />} />
+      <Route path="/sanatci/:id" element={<Sanatci />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/kategori/resim" element={<ResimPage />} />
+      <Route path="/kategori/heykel" element={<HeykelPage />} />
+      <Route path="/kategori/fotograf" element={<FotografPage />} />
+      <Route path="/ekle" element={<EserEkle />} />
+      <Route path="/sculpture" element={<EserlerDetay />} />
+      <Route path="/canli-muzayede" element={<CanliMuzayede />} />
+      <Route path="/alisveris-sepeti" element={<AlisverisSepeti />} />
+      <Route path="/profil-duzenle" element={<ProfilDuzenleme />} />
+      <Route path="/adminlogin" element={<AdminLogin />} />
+      <Route path="/auctions/create" element={<Auction />} />
+      <Route path="/auctions/list" element={<AuctionList />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/users" element={<Users />} />
+    </Routes>
+  );
 }
 
 export default App;
