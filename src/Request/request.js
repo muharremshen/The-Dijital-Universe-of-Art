@@ -191,7 +191,7 @@ export const fetchArtPiece = async (payload) => {
 export const fetchArtPieceId = async (userId) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}/art-piece/pieces/${userId}`, {
+    const response = await fetch(`${BASE_URL}/art-piece/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -236,7 +236,7 @@ export const fetchLatestArtPieces = async () => {
 export const deleteArtPiece = async (userId) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}/art-piece/pieces2/${userId}`, {
+    const response = await fetch(`${BASE_URL}/art-piece/${userId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -259,7 +259,7 @@ export const deleteArtPiece = async (userId) => {
 export const fetchFotografPieces = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}/art-piece/pieces3/fotograf`, {
+    const response = await fetch(`${BASE_URL}/art-piece/fotograf`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -281,7 +281,7 @@ export const fetchFotografPieces = async () => {
 export const fetchResimPieces = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}/art-piece/pieces4/resim`, {
+    const response = await fetch(`${BASE_URL}/art-piece/resim`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -304,7 +304,7 @@ export const fetchResimPieces = async () => {
 export const fetchHeykelPieces = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}/art-piece/pieces5/heykel`, {
+    const response = await fetch(`${BASE_URL}/art-piece/heykel`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
