@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+// AlisverisSepeti.js
+
+import React, { useState, useEffect } from "react";
 import {
    Table,
    Button,
@@ -11,52 +12,24 @@ import {
    Alert,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useCart } from "../Contexts/CartContext";
 
 const AlisverisSepeti = () => {
-   const [cartItems, setCartItems] = useState([
-      {
-         id: 1,
-         name: "Nilüferler",
-         price: 8000,
-         quantity: 1,
-      },
-      {
-         id: 2,
-         name: "Kanatlı Balık",
-         price: 20000,
-         quantity: 1,
-      },
-   ]);
-   const [discountCode, setDiscountCode] = useState(""); // Kullanıcının girdiği indirim kodu
-   const [discountApplied, setDiscountApplied] = useState(false); // İndirim kodunun uygulanıp uygulanmadığını belirten state
-   const [discountPercent, setDiscountPercent] = useState(0); // Uygulanan indirim yüzdesini tutan state
-   const [discountAmount, setDiscountAmount] = useState(0); // Hesaplanan indirim miktarını tutan state
+   const { cartItems, removeFromCart, clearCart, handleQuantityChange } =
+      useCart();
+   const [discountCode, setDiscountCode] = useState("");
+   const [discountApplied, setDiscountApplied] = useState(false);
+   const [discountPercent, setDiscountPercent] = useState(0);
+   const [discountAmount, setDiscountAmount] = useState(0);
 
    useEffect(() => {
-      // sayfa yenilendiğinde veya cartitems,discountapplied,discountpercent değiştiğinde tetiklenir ve günceller.
       const subtotal = cartItems.reduce(
          (total, item) => total + item.price * item.quantity,
          0
       );
       const discount = discountApplied ? (subtotal * discountPercent) / 100 : 0;
-
       setDiscountAmount(discount);
    }, [cartItems, discountApplied, discountPercent]);
-
-   const handleQuantityChange = (itemId, quantity) => {
-      console.log("Değiştirildi", quantity, itemId);
-      setCartItems((currentItems) =>
-         currentItems.map((item) =>
-            item.id === itemId ? { ...item, quantity: quantity } : item
-         )
-      );
-   };
-
-   const handleRemoveItem = (itemId) => {
-      setCartItems((currentItems) =>
-         currentItems.filter((item) => item.id !== itemId)
-      );
-   };
 
    const handleApplyDiscount = () => {
       if (discountCode === "INDIRIM10") {
@@ -65,10 +38,6 @@ const AlisverisSepeti = () => {
       } else {
          alert("Geçersiz indirim kodu.");
       }
-   };
-
-   const handleClearCart = () => {
-      setCartItems([]);
    };
 
    const calculateTotal = () => {
@@ -113,7 +82,7 @@ const AlisverisSepeti = () => {
                      <td>
                         <Button
                            variant="outline-danger"
-                           onClick={() => handleRemoveItem(item.id)}
+                           onClick={() => removeFromCart(item.id)}
                         >
                            Sil
                         </Button>
@@ -129,7 +98,7 @@ const AlisverisSepeti = () => {
                </Link>
             </Col>
             <Col className="text-right">
-               <Button variant="secondary" onClick={handleClearCart}>
+               <Button variant="secondary" onClick={clearCart}>
                   Alışveriş Sepetini Temizle
                </Button>
             </Col>

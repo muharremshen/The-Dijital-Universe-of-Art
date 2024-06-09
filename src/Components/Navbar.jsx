@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import logo from "../img/SanatınDijitalEvreni.png";
 import { MdAddToPhotos } from "react-icons/md";
+import { BsCart } from "react-icons/bs";
 
 const Navbar = () => {
    const performSearch = (event) => {
@@ -150,6 +151,11 @@ const Navbar = () => {
                   <button className="btn btn-outline-success" type="submit">
                      <i className="bi bi-search"></i>
                   </button>
+                  <li>
+                     <Link to="/alisveris-sepeti" className="nav-link mx-3">
+                        <BsCart size={24} />
+                     </Link>
+                  </li>
                </form>
             </div>
          </div>

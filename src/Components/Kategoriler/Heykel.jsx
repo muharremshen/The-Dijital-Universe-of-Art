@@ -96,15 +96,17 @@ const Heykel = () => {
                   opacity: 0.6,
                }}
             >
-               Fotoğraf
+               Heykel
             </h6>
             <p>
-               Fotoğraf, çağdaş sanatın yenilikçi dilini konuşan ve son yıllarda
-               önde gelen sanat fuarlarından müzayedelere, özel koleksiyonlara
-               kadar geniş bir platformda kendine yer bulan bir sanat formudur.
-               Fotoğraf sanatçısının objektifi aracılığıyla yakalanan anılar,
-               izleyicilere "müze kalitesi"nde bir deneyim sunar, her karede
-               sanatseverleri etkileyen bir hikaye anlatır.
+               Sanatın üç boyutlu ifadesi olarak heykel, farklı tekniklerle
+               üretilmiş çok çeşitli seçeneklere ev sahipliği yapar. Figüratif
+               ya da soyut, bronz, metal, ahşap, seramik, gibi çeşitli
+               malzemelerle şekillenen heykel koleksiyonumuz, ünlü
+               heykeltıraşların ve genç yeteneklerin imzasını taşıyan eserlerle
+               zenginleşmiştir. Galerimizde, heykel dünyasında aradığınızı
+               bulmak ve koleksiyonunuzu özelleştirmek için geniş bir seçenek
+               yelpazesi sizleri bekliyor.
             </p>
          </div>
          <Row>

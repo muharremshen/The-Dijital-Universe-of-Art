@@ -8,7 +8,7 @@ body {
    box-sizing: border-box;
 }
 a {
-   text-decoration: none;
+   text-decoration: none !important;
    color: #212529;
 }
 
@@ -34,8 +34,4 @@ li {
 }
 .container img.logom {
    width: 60px;
-}
-
-Link {
-   text-decoration: none;
 }

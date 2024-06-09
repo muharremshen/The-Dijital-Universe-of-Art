@@ -90,15 +90,16 @@ const Resim = () => {
                   opacity: 0.6,
                }}
             >
-               Fotoğraf
+               Resim
             </h6>
             <p>
-               Fotoğraf, çağdaş sanatın yenilikçi dilini konuşan ve son yıllarda
-               önde gelen sanat fuarlarından müzayedelere, özel koleksiyonlara
-               kadar geniş bir platformda kendine yer bulan bir sanat formudur.
-               Fotoğraf sanatçısının objektifi aracılığıyla yakalanan anılar,
-               izleyicilere "müze kalitesi"nde bir deneyim sunar, her karede
-               sanatseverleri etkileyen bir hikaye anlatır.
+               Çağdaş Türk sanatının özgün temsilcilerinin farklı tekniklerde
+               yarattığı yağlıboya, akrilik, karışık teknik, suluboya, figüratif
+               veya soyut resimleri, çeşitli tarzları ve geniş bütçe skalasını
+               içinde barındıran orijinal sanat eserleri, ev veya işyerinizin
+               dekorasyonunu zenginleştirmek için ideal seçenekler sunar. Bugün
+               edindiğiniz eserler, gelecek kuşaklara bırakacağınız değerli
+               "Aile Mirası Tabloları" olacak.
             </p>
          </div>
          <Row>

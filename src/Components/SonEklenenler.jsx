@@ -24,7 +24,7 @@ const SonEklenenler = () => {
             {sonEklenenFotograflar.map((foto) => (
                <div key={foto._id} className="col-md-3 mb-4">
                   <div className="card foto-odak">
-                     <Link to="/sculpture">
+                     <Link to={`/sculpture/${foto._id}`}>
                         <img
                            src={foto.imageUrl}
                            className="card-img-top foto-odak2"
