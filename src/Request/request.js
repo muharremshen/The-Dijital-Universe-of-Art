@@ -467,7 +467,7 @@ export const deleteUser = async (userId) => {
       const data = await response.json();
       return data;
    } catch (error) {
-      console.error("Error fetching auction details:", error);
+      console.error("Error deleting user:", error);
       throw error;
    }
 };
