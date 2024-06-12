@@ -355,34 +355,15 @@ export const placeBid = async (bidData) => {
          },
          body: JSON.stringify(bidData),
       });
+
       if (!response.ok) {
          throw new Error("Network response was not ok");
       }
+
       const data = await response.json();
       return data;
    } catch (error) {
       console.error("Error placing bid:", error);
-      throw error;
-   }
-};
-
-export const getAuctionDetails = async (auctionId) => {
-   try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${BASE_URL}/auction/${auctionId}`, {
-         method: "GET",
-         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-         },
-      });
-      if (!response.ok) {
-         throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      return data;
-   } catch (error) {
-      console.error("Error fetching auction details:", error);
       throw error;
    }
 };
@@ -442,13 +423,13 @@ export const fetchAuctions = async () => {
       });
 
       if (!response.ok) {
-         const errorData = await response.json();
-         throw new Error(errorData.message || "Müzayedeler alınamadı");
+         throw new Error("Network response was not ok");
       }
 
-      return response.json();
+      const data = await response.json();
+      return data;
    } catch (error) {
-      console.error("Müzayedeler çekilemedi", error);
+      console.error("Error fetching auctions:", error);
       throw error;
    }
 };
